@@ -34,23 +34,22 @@ def fanc():
     for row in table.find_all('tr')[1:]:  # "[1:]" to exclude the header row.
         cells = row.find_all('td') # devide each row.
         if len(cells) == 0: continue # If the cell is empty; skips it, To avoid cells that contains the first letter of the animals
-        animal = cells[animalLoc].text.strip()
+        animal = cells[animalLoc].text.strip().split(" ")[0] # split by space and takes the first word to not include wiki info like: "(list) Also see Boar"
         
         # To avoid the cell data crumping together, I'm replacing "<br/>" with ", "
         cellContent = str(cells[collateralAdjectiveLoc])
         cellContent = cellContent.replace('<br/>', ', ')
-        textContent = BeautifulSoup(cellContent, 'html.parser').get_text().strip()
+        textContent = BeautifulSoup(cellContent, 'html.parser').get_text().strip().split(" ")[0] # split by space for the same reason spliting the animal name
 
         adjectives = [adj.strip() for adj in textContent.strip().split(',')]
 
         # adding the adjectives to data dict
         for adj in adjectives:
-            if adj not in ['', '?']: # filter out the adj
+            if adj not in ['', '?']: # filter out the adj by not taking empty and question marks.
                 if adj in data:
                     data.setdefault(adj, []).append(animal)
                 else:
                     data[adj] = [animal]
-        #data[adjectives] = animal
 
     for adj, animals in data.items():
         print(f"{adj}: {', '.join(animals)}")
