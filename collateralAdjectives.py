@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import html
 
 def fanc():
     # getting the html content of https://en.wikipedia.org/wiki/List_of_animal_names
@@ -51,8 +52,23 @@ def fanc():
                 else:
                     data[adj] = [animal]
 
-    for adj, animals in data.items():
-        print(f"{adj}: {', '.join(animals)}")
+    #for adj, animals in data.items():
+    #    print(f"{adj}: {', '.join(animals)}")
+
+    # Bonus 3: output the result to html file.
+    with open('output.html', 'w') as f:
+        # Write the HTML table header
+        f.write('<table>\n')
+        f.write('<tr><th>Collateral Adjective</th><th>Animals</th></tr>\n')
+
+        # Write the table rows for each collateral adjective and its animals
+        for adj, animals in data.items():
+            animals_html = ', '.join(animals)
+            adj_html = html.escape(adj)
+            f.write(f'<tr><td>{adj_html}</td><td>{animals_html}</td></tr>\n')
+
+        # Write the HTML table footer
+        f.write('</table>\n')
 
 if __name__ == "__main__":
     fanc()
