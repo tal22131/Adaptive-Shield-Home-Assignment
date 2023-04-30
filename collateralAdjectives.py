@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import html
+import os
 
 def fanc():
     # getting the html content of https://en.wikipedia.org/wiki/List_of_animal_names
@@ -52,22 +53,35 @@ def fanc():
                 else:
                     data[adj] = [animal]
 
-    #for adj, animals in data.items():
-    #    print(f"{adj}: {', '.join(animals)}")
-
     # Bonus 3: output the result to html file.
     with open('output.html', 'w') as f:
-        # Write the HTML table header
+        # Write the HTML table header.
         f.write('<table>\n')
         f.write('<tr><th>Collateral Adjective</th><th>Animals</th></tr>\n')
 
-        # Write the table rows for each collateral adjective and its animals
+        # Write the table rows for each collateral adjective and its animals.
         for adj, animals in data.items():
-            animals_html = ', '.join(animals)
-            adj_html = html.escape(adj)
-            f.write(f'<tr><td>{adj_html}</td><td>{animals_html}</td></tr>\n')
+            animalName = ', '.join(animals)
 
-        # Write the HTML table footer
+            if "/" in animalName: # if animal have / in the name (like ass/donkey) removes the "/"
+                animalName = animalName.split("/")[0] + animalName.split("/")[1]
+
+            adjName = html.escape(adj)
+
+            if len(animals) > 1: # if the animals list contains multiple animals:
+                f.write(f'<tr><td>{adjName}</td><td>')
+                for animal in animals: # add each animal name a link.
+                    if os.path.isfile("./tmp/"+animal+".jpg"):
+                        f.write(f'<a href="./tmp/{animal}.jpg">{animal}</a>, ')
+                f.write('</td></tr>\n')
+                
+            if os.path.isfile("./tmp/"+animalName+".jpg"): # if pic exists:
+                f.write(f'<tr><td>{adjName}</td><td><a href="./tmp/{animalName}.jpg">{animalName}</a></td></tr>\n')
+                
+            elif len(animals) == 1: # if pic doens't exists:
+                f.write(f'<tr><td>{adjName}</td><td>{animalName}</td></tr>\n')
+
+        # Write the HTML table footer.
         f.write('</table>\n')
 
 if __name__ == "__main__":
