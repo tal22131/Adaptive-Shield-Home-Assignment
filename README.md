@@ -24,5 +24,10 @@ Tips: Feel free to use BeautifulSoup and Requests, and please avoid pandas if yo
 # solution
 
 Main exercise took me 1h.
+
 bonus 1 took me 40m.
+
 bonus 3 took me 20m.
+
+The bonuses are on "bonus" branch, tmp folder added to .gitignore, you can get the pics by using the command python downloadPics.py.
+python main.py for the main exercise.
