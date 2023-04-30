@@ -41,12 +41,19 @@ def fanc():
         cellContent = cellContent.replace('<br/>', ', ')
         textContent = BeautifulSoup(cellContent, 'html.parser').get_text().strip()
 
-        # adding the adjectives to data dict
         adjectives = [adj.strip() for adj in textContent.strip().split(',')]
-        data[animal] = adjectives
 
-    for animal, adjectives in data.items():
-        print(f'{animal}: {", ".join(adjectives)}')
+        # adding the adjectives to data dict
+        for adj in adjectives:
+            if adj not in ['', '?']: # filter out the adj
+                if adj in data:
+                    data.setdefault(adj, []).append(animal)
+                else:
+                    data[adj] = [animal]
+        #data[adjectives] = animal
+
+    for adj, animals in data.items():
+        print(f"{adj}: {', '.join(animals)}")
 
 if __name__ == "__main__":
     fanc()
