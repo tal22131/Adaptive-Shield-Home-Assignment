@@ -28,6 +28,9 @@ headers = [th.text.strip() for th in header_row.find_all('th')]
 target_headers = 'Animal'
 animalLoc = headers.index(target_headers) # equals to 0
 
+# Create dir temp.
+os.mkdir("./tmp/") 
+
 # for loop going on all of the cells:
 for row in table.find_all('tr')[1:]:  # "[1:]" to exclude the header row.
     cells = row.find_all('td') # devide each row.
@@ -46,7 +49,7 @@ for row in table.find_all('tr')[1:]:  # "[1:]" to exclude the header row.
             continue
         imageUrl = animalPageSoup.find('div', {'class': 'thumbinner'}).find('img')['src'] # find "thumbinner" div in it.
 
-    animal = cells[animalLoc].text.strip().split(" ")[0] # split by space and takes the first word to not include wiki info like: "(list) Also see Boar"
+    animal = cells[animalLoc].find("a").text.strip() # split by space and takes the first word to not include wiki info like: "(list) Also see Boar"
 
     imageUrl = "https:"+imageUrl # adds "https:" to the name of the url
     if "/" in animal: # if animal have / in the name (like ass/donkey) removes the "/"
